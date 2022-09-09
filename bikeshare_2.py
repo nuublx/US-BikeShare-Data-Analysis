@@ -1,13 +1,13 @@
 import time
 import pandas as pd
 import numpy as np
-
-CITY_DATA = { 'chicago': 'chicago.csv',
-              'new york city': 'new_york_city.csv',
-              'washington': 'washington.csv' }
-MONTH_DATA=['January', 'February', 'March', 'April', 'May', 'June']
-DAY_DATA=['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday']
-
+import math
+CITY_DATA = { 'chicago': 'all-project-files\chicago.csv',
+              'new york city': 'all-project-files\\new_york_city.csv',
+              'washington': 'all-project-files\washington.csv' }
+MONTH_DATA=['january', 'february', 'march', 'april', 'may', 'june']
+DAY_DATA=['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday','friday']
+pd.set_option('display.max_columns',200) # to display all columns of dataframe
 def get_filters():
     """
     Asks user to specify a city, month, and day to analyze.
@@ -37,24 +37,22 @@ def get_filters():
             print("Invalid Choice!!!")
 
     # get user input for month (all, january, february, ... , june)
-    month='All'
+    month='all'
     if choice =='month' or choice =='both':
         while True:
-            month=input("which month? January, February, March, April, May, June:\n")
+            month=input("which month? January, February, March, April, May, June:\n").lower()
             if month in MONTH_DATA:
                 print()
                 break
             else:
                 print("Invalid Choice!!!")
 
-
-
     # get user input for day of week (all, monday, tuesday, ... sunday)
-    day='All'
+    day='all'
 
     if choice =='day' or choice =='both':
         while True:
-            day=input("which day? Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday:\n")
+            day=input("which day? Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday:\n").lower()
             if day in DAY_DATA:
                 print()
                 break
@@ -89,12 +87,15 @@ def load_data(city, month, day):
 
     df['day_of_week']=df['Start Time'].dt.day_name()
 
-    if month !='All':
+    df['Birth Year'] = df['Birth Year'].astype('Int64')
+
+
+    if month !='all':
         month=MONTH_DATA.index(month)+1
         df=df[ df['month']==month ]
 
-    if day !='All':
-        df=df[ df['day_of_week']==day ]
+    if day !='all':
+        df=df[ df['day_of_week']==day.title() ]
 
     return df
 
@@ -108,12 +109,13 @@ def time_stats(df,m,d):
         print('\nCalculating The Most Frequent Times of Travel...\n')
         start_time = time.time()
     # display the most common month
-        if m=="All":
+        if m=="all":
             month=df['month'].mode()[0]
+            month=MONTH_DATA[month-1].title()
             print(f'The most common month is: {month}\n')
 
     # display the most common day of week
-        if d=="All":
+        if d=="all":
             day=df['day_of_week'].mode()[0]
             print(f'The most common day of week is: {day}\n')
 
@@ -122,7 +124,9 @@ def time_stats(df,m,d):
         hour=df['Start Hour'].mode()[0]
         print(f'The most common start hour is: {hour}\n')
 
-        print("\nThis took %s seconds.\n" % (time.time() - start_time).round())
+        num=(time.time() - start_time)
+        time_spent=math.ceil(num*100)/100
+        print(f"\nThis took {time_spent}seconds.\n"  )
     else:
         print("No Data To Print\n")
     print('-'*40)
@@ -151,7 +155,9 @@ def station_stats(df):
 
         print(f'The most frequent combination of start station and end station is "{combination_start_station}" to "{combination_end_station}"\n')
 
-        print("\nThis took %s seconds.\n" % (time.time() - start_time).round())
+        num=(time.time() - start_time)
+        time_spent=math.ceil(num*100)/100
+        print(f"\nThis took {time_spent}seconds.\n"  )
     else:
         print("No Data To Print\n")
     print('-'*40)
@@ -163,14 +169,16 @@ def trip_duration_stats(df):
         start_time = time.time()
 
     # display total travel time
-        total_travel_time=df['Trip Duration'].sum().round()
+        total_travel_time=math.ceil(df['Trip Duration'].sum())
         print(f'Total Travel Time is: {total_travel_time} seconds\n')
 
     # display mean travel time
-        average_travel_time=df['Trip Duration'].mean().round()
+        average_travel_time=math.ceil(df['Trip Duration'].mean())
         print(f'Total Travel Time is: {average_travel_time} seconds\n')
 
-        print("\nThis took %s seconds.\n" % (time.time() - start_time).round())
+        num=(time.time() - start_time)
+        time_spent=math.ceil(num*100)/100
+        print(f"\nThis took {time_spent}seconds.\n"  )
     else:
         print("No Data To Print\n")
     print('-'*40)
@@ -197,7 +205,9 @@ def user_stats(df):
             most_common=df['Birth Year'].mode()[0]
             print(f'Year of Birth:\nEarliest: {earliest}\nMost Recent: {most_recent}\nMost Common: {most_common}\n')
 
-            print("\nThis took %s seconds." % (time.time() - start_time).round())
+            num=(time.time() - start_time)
+            time_spent=math.ceil(num*100)/100
+            print(f"\nThis took {time_spent}seconds.\n")
         except:
             print("No Data to print\n")
     else:
