@@ -21,7 +21,7 @@ def get_filters():
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     
     while True:
-        city=input("Would you like to see data for which city chicago, new york city or washington?\n")
+        city = input('\nSelect Chicago, Washington or New York City for your analysis.\n').lower()
         if city in CITY_DATA:
             print()
             break
@@ -122,7 +122,7 @@ def time_stats(df,m,d):
         hour=df['Start Hour'].mode()[0]
         print(f'The most common start hour is: {hour}\n')
 
-        print("\nThis took %s seconds.\n" % (time.time() - start_time))
+        print("\nThis took %s seconds.\n" % (time.time() - start_time).round())
     else:
         print("No Data To Print\n")
     print('-'*40)
@@ -151,7 +151,7 @@ def station_stats(df):
 
         print(f'The most frequent combination of start station and end station is "{combination_start_station}" to "{combination_end_station}"\n')
 
-        print("\nThis took %s seconds.\n" % (time.time() - start_time))
+        print("\nThis took %s seconds.\n" % (time.time() - start_time).round())
     else:
         print("No Data To Print\n")
     print('-'*40)
@@ -163,14 +163,14 @@ def trip_duration_stats(df):
         start_time = time.time()
 
     # display total travel time
-        total_travel_time=df['Trip Duration'].sum()
+        total_travel_time=df['Trip Duration'].sum().round()
         print(f'Total Travel Time is: {total_travel_time} seconds\n')
 
     # display mean travel time
-        average_travel_time=df['Trip Duration'].mean()
+        average_travel_time=df['Trip Duration'].mean().round()
         print(f'Total Travel Time is: {average_travel_time} seconds\n')
 
-        print("\nThis took %s seconds.\n" % (time.time() - start_time))
+        print("\nThis took %s seconds.\n" % (time.time() - start_time).round())
     else:
         print("No Data To Print\n")
     print('-'*40)
@@ -197,7 +197,7 @@ def user_stats(df):
             most_common=df['Birth Year'].mode()[0]
             print(f'Year of Birth:\nEarliest: {earliest}\nMost Recent: {most_recent}\nMost Common: {most_common}\n')
 
-            print("\nThis took %s seconds." % (time.time() - start_time))
+            print("\nThis took %s seconds." % (time.time() - start_time).round())
         except:
             print("No Data to print\n")
     else:
@@ -237,8 +237,13 @@ def main():
         trip_duration_stats(df)
         user_stats(df)
         print_trip_data(df)
-        restart = input('\nWould you like to restart? Enter yes or no.\n')
-        if restart.lower() != 'yes':
+        while True:
+            restart = input('\nWould you like to restart? Enter yes or no.\n').lower()
+            if restart == 'yes' or restart == 'no':
+                break
+            else:
+                print("Invalid Choice!!!\n")
+        if restart != 'yes':
             break
 
 
