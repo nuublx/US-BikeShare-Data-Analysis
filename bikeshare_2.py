@@ -231,7 +231,13 @@ def print_trip_data(df):
             print(df.iloc[i:j])
             i+=5
             j=i+5
-            answer=input("Show more raw data?\n").lower()
+            while True:
+                answer=input("Show more raw data?\n").lower()
+                if answer=='yes' or answer=='no':
+                    break
+                else:
+                    print("Invalid Choice!!!\n")
+            
 
         if i<len(df.index)<j and answer=='yes':
             print(df.iloc[i:])
